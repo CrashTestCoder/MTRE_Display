@@ -25,7 +25,7 @@ namespace Timer0 {
 	} Prescaler;
 	
 	inline void setMode(Mode mode) {
-		Serial::sendf("T0 set mode: %i\n", mode);
+		Serial::sendf("T0 set mode: 0x%02X\n", mode);
 		TCCR0A |=   mode &  ((1 << WGM01) | (1 << WGM00));
 		TCCR0A &= ~(mode & ~((1 << WGM01) | (1 << WGM00)));
 		
@@ -34,7 +34,7 @@ namespace Timer0 {
 	}
 	
 	inline void setPrescaler(Prescaler prescaler) {
-		Serial::sendf("T0 set prescaler: %i\n", prescaler);
+		Serial::sendf("T0 set prescaler: 0x%02X\n", prescaler);
 		TCCR0B |=   prescaler &  ((1 << CS02) | (1 << CS01) | (1 << CS00));
 		TCCR0B &= ~(prescaler & ~((1 << CS02) | (1 << CS01) | (1 << CS00)));
 	}
@@ -71,7 +71,7 @@ namespace Timer1 {
 	} Prescaler;
 	
 	inline void setMode(Mode mode) {
-		Serial::sendf("T1 set mode: %i\n", mode);
+		Serial::sendf("T1 set mode: 0x%02X\n", mode);
 		TCCR1A |=   mode &  ((1 << WGM11) | (1 << WGM10));
 		TCCR1A &= ~(mode & ~((1 << WGM11) | (1 << WGM10)));
 		
@@ -80,7 +80,7 @@ namespace Timer1 {
 	}
 	
 	inline void setPrescaler(Prescaler prescaler) {
-		Serial::sendf("T1 set prescaler: %i\n", prescaler);
+		Serial::sendf("T1 set prescaler: 0x%02X\n", prescaler);
 		TCCR0B |=   prescaler &  ((1 << CS12) | (1 << CS11) | (1 << CS10));
 		TCCR0B &= ~(prescaler & ~((1 << CS12) | (1 << CS11) | (1 << CS10)));
 	}
@@ -108,7 +108,7 @@ namespace Timer2 {
 	} Prescaler;
 	
 	inline void setMode(Mode mode) {
-		Serial::sendf("T2 set mode: %i\n", mode);
+		Serial::sendf("T2 set mode: 0x%02X\n", mode);
 		TCCR2A |=   mode &  ((1 << WGM21) | (1 << WGM20));
 		TCCR2A &= ~(mode & ~((1 << WGM21) | (1 << WGM20)));
 			
@@ -117,7 +117,7 @@ namespace Timer2 {
 	}
 	
 	inline void setPrescaler(Prescaler prescaler) {
-		Serial::sendf("T2 set prescaler: %i\n", prescaler);
+		Serial::sendf("T2 set prescaler: 0x%02X\n", prescaler);
 		TCCR2B |=   prescaler &  ((1 << CS22) | (1 << CS21) | (1 << CS20));
 		TCCR2B &= ~(prescaler & ~((1 << CS22) | (1 << CS21) | (1 << CS20)));
 	}

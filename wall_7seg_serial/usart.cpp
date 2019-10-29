@@ -62,12 +62,13 @@ void Serial::sendf(char const* format, ...)	// using va_list to minimize program
 	va_list vl;
 	va_start(vl,format);
 	char *str = (char*)malloc(30);
-	if(!(size = vsnprintf(str, 30, format, vl)))
+	if(!((size = vsnprintf(str, 30, format, vl)) < 30))
 	{
 		free(str);
 		str = (char*)malloc(size);
 		vsprintf(str, format, vl);
 	}
+	
 	send(str);
 	free(str);
 }

@@ -13,12 +13,18 @@ volatile int digit = sizeof(float);
 /**********************************************************************************************/
 /*                                      INT 0 Interrupts                                      */
 /**********************************************************************************************/
+ISR(INT0_vect)
+{
+	//TCNT1 = 0;
+}
 
 ISR(INT1_vect)
 {
-	//Serial::send("INT1\n");
-	
-	//Serial::send("/INT1\n");
+	float const dist = TCNT1 / (1000000.0 / 256) *343;
+	auto const cnt = TCNT0;
+	//if( cnt <100)
+		digit = cnt;
+	Serial::sendf("dist: %i\n",TCNT0);//, (uint8_t)(dist*10));
 }
 
 /**********************************************************************************************/
@@ -29,9 +35,10 @@ ISR(TIMER0_COMPA_vect)
 {
 	//Serial::send("TIMER0_COMPA_vect\n");
 	
-	PORTD |=  (1 << PORTD2);
-	PORTD &= ~(1 << PORTD2);
-	
+	PORTD |=  (1 << PORTD4);
+	for(volatile int i = 0; i < 5; i++);
+	PORTD &= ~(1 << PORTD4);
+	//TCNT0 = 47;
 	//Serial::send("/TIMER0_COMPA_vect\n");
 	
 }
@@ -40,30 +47,32 @@ ISR(TIMER0_COMPA_vect)
 /*                                     Timer 1 Interrupts                                     */
 /**********************************************************************************************/
 
-ISR(TIMER1_COMPA_vect)
-{
-	//Serial::send('a');
-	auto const num = digit;
-	Serial::sendf("%d\n",((uint16_t)(num*1000)));
-	digit += .001;
-	if(digit == 10000) digit = -999;
-}
+//ISR(TIMER1_COMPA_vect)
+//{
+	////Serial::send('a');
+	//auto const num = digit;
+	//Serial::sendf("%d\n",((uint16_t)(num*1000)));
+	//digit += .001;
+	//if(digit == 10000) digit = -999;
+//}
 
 /**********************************************************************************************/
 /*                                     Timer 2 Interrupts                                     */
 /**********************************************************************************************/
 
 
-ISR(TIMER2_OVF_vect)
+ISR(TIMER2_COMPA_vect)
 {
 	//Serial::send("TIMER2_OVF_vect\n");
 	
+	//PORTD |=  (1 << PORTD4);
+	//PORTD &= ~(1 << PORTD4);
 	static volatile uint8_t dig = 0;
 	dig++;
 	dig %= 4; // toggle digit
 	disp(_off);
 	PORTC = 0;
-	int const digit_ = digit*1000;
+	int const digit_ = digit;
 	switch(dig)
 	{
 		case 0: {
