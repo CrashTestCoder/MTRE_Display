@@ -18,7 +18,8 @@ int main(void)
 {
     DDRB = 0xff;
 	DDRC = 0xff;
-	DDRD = (1 << PORTD4);
+	DDRD =  (1 << PORTD4) | 
+			(1 << PORTD7);
 
 	Serial::begin(4800,Serial::async);
 	Serial::send("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
@@ -33,28 +34,15 @@ int main(void)
 		OCR2A = 203;
     }
 
-	
-    {
-		using namespace Timer1;
-		//Timer1::setMode(CTC_OCRA);
-		//Timer1::setMode(CTC_OCRA);
-		Timer1::setPrescaler(_64);
-	    	
-	    //TIMSK1 |= (1 << OCIE1A);
-	    //OCR1A = (1 << 12) -191;
-		OCR1A = 0xfee;
-    }
 
 	{	// Setup Timer 0
 		using namespace Timer0;
 		Timer0::setMode(CTC);
-		//Timer0::setPrescaler(Timer0::_256);
-		TCCR0B = 4;
-		Serial::sendf("%i\n",TCCR0B);
+		Timer0::setPrescaler(Timer0::_256);
 		
 		OCR0A = 194;
 	
-		TIMSK0 |= (1 << OCIE0A);
+		TIMSK0 |= (1 << OCIE0A) | (1 << OCIE0B);
 	}
 
 	EICRA = (1 << ISC01) | (1 << ISC11) | (1 << ISC00);
@@ -64,9 +52,6 @@ int main(void)
 	
 	Serial::sendf("0x%08x\n",53.2f);
 	
-	//uint8_t data = 0;
-    while (1){
-		
-	}//Serial::send("test\n");
+    while (1);
 }
 

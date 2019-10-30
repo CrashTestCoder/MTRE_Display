@@ -15,16 +15,16 @@ volatile int digit = sizeof(float);
 /**********************************************************************************************/
 ISR(INT0_vect)
 {
-	//TCNT1 = 0;
+	TCNT0 = 0;
 }
 
 ISR(INT1_vect)
 {
 	float const dist = TCNT1 / (1000000.0 / 256) *343;
 	auto const cnt = TCNT0;
-	//if( cnt <100)
-		digit = cnt;
-	Serial::sendf("dist: %i\n",TCNT0);//, (uint8_t)(dist*10));
+	digit = cnt;
+	OCR0B = 2*cnt;
+	//Serial::sendf("dist: %i\n",TCNT0);//, (uint8_t)(dist*10));
 }
 
 /**********************************************************************************************/
@@ -33,14 +33,17 @@ ISR(INT1_vect)
 
 ISR(TIMER0_COMPA_vect)
 {
-	//Serial::send("TIMER0_COMPA_vect\n");
-	
 	PORTD |=  (1 << PORTD4);
-	for(volatile int i = 0; i < 5; i++);
+	for(volatile int i = 0; i < 0; i++); // wait 13us (measured)
 	PORTD &= ~(1 << PORTD4);
-	//TCNT0 = 47;
-	//Serial::send("/TIMER0_COMPA_vect\n");
 	
+	PORTD |= (1 << PORTD7);
+	
+}
+
+ISR(TIMER0_COMPB_vect)
+{
+	PORTD &= ~(1 << PORTD7);
 }
 
 /**********************************************************************************************/
