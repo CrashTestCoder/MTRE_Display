@@ -46,7 +46,7 @@ uint8_t Serial::read()
 	return UDR0;
 }
 
-void Serial::send(char* data)
+void Serial::send(char const* data)
 {
 	while(*data)
 		Serial::send(*data), data++;

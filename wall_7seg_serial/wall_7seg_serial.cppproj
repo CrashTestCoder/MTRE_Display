@@ -189,6 +189,9 @@
     <Compile Include="seven_segment.hpp">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="timer.cpp">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="timer.hpp">
       <SubType>compile</SubType>
     </Compile>

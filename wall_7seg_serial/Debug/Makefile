@@ -40,6 +40,7 @@ C_SRCS +=  \
 ../interrupts.cpp \
 ../main.cpp \
 ../seven_segment.cpp \
+../timer.cpp \
 ../usart.cpp
 
 
@@ -53,24 +54,28 @@ OBJS +=  \
 interrupts.o \
 main.o \
 seven_segment.o \
+timer.o \
 usart.o
 
 OBJS_AS_ARGS +=  \
 interrupts.o \
 main.o \
 seven_segment.o \
+timer.o \
 usart.o
 
 C_DEPS +=  \
 interrupts.d \
 main.d \
 seven_segment.d \
+timer.d \
 usart.d
 
 C_DEPS_AS_ARGS +=  \
 interrupts.d \
 main.d \
 seven_segment.d \
+timer.d \
 usart.d
 
 OUTPUT_FILE_PATH +=wall_7seg_serial.elf
@@ -102,6 +107,13 @@ LINKER_SCRIPT_DEP+=
 	
 
 ./seven_segment.o: .././seven_segment.cpp
+	@echo Building file: $<
+	@echo Invoking: AVR8/GNU C Compiler : 5.4.0
+	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-g++.exe$(QUOTE) -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.3.300\include"  -O3 -std=c++1z -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -pedantic -mmcu=atmega328p -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.3.300\gcc\dev\atmega328p" -c -std=c++1z -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	@echo Finished building: $<
+	
+
+./timer.o: .././timer.cpp
 	@echo Building file: $<
 	@echo Invoking: AVR8/GNU C Compiler : 5.4.0
 	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-g++.exe$(QUOTE) -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.3.300\include"  -O3 -std=c++1z -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -pedantic -mmcu=atmega328p -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.3.300\gcc\dev\atmega328p" -c -std=c++1z -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 

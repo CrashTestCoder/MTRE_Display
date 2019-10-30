@@ -20,11 +20,24 @@ ISR(INT0_vect)
 
 ISR(INT1_vect)
 {
-	float const dist = TCNT1 / (1000000.0 / 256) *343;
 	auto const cnt = TCNT0;
-	digit = cnt;
-	OCR0B = 2*cnt;
-	//Serial::sendf("dist: %i\n",TCNT0);//, (uint8_t)(dist*10));
+	static uint64_t raw_read = 0;
+	raw_read <<= 8 * sizeof(cnt);
+	raw_read |= cnt;
+	//Serial::sendf("0x%08x\t",raw_read);
+	auto const avg_cnt = []{
+		float count = 0;
+		for(uint8_t i = 0; i < sizeof(raw_read); i++)
+		{
+			count += (uint8_t)(raw_read >> (i*8));
+			//Serial::sendf("%i\t",(uint8_t)(raw_read >> (i*8)));
+		}
+		return count / sizeof(raw_read);
+	}();
+	auto const dist = avg_cnt *343.0f / (2000000.0f / 256) * 1/0.0254f; 
+	digit = dist;
+	OCR0B = 2*avg_cnt;
+	//Serial::sendf("dist: %i\n", (uint32_t)(avg_cnt));
 }
 
 /**********************************************************************************************/

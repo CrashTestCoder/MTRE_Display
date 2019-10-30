@@ -8,5 +8,7 @@ main.cpp
 
 seven_segment.cpp
 
+timer.cpp
+
 usart.cpp
 
