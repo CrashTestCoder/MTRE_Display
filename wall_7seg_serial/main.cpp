@@ -33,7 +33,7 @@ int main(void)
 // 	OCR0A = 194;
 
 
-	//Serial::begin(4800,Serial::async);
+	Serial::begin(4800,Serial::async);
 	//Serial::send("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 
     {	// Setup Timer 2
@@ -55,10 +55,6 @@ int main(void)
 	
 		TIMSK0 = (1 << OCIE0A) | (1 << OCIE0B);
 	}
-
-auto const time = TCNT1;
-Serial::begin(4800,Serial::async);
-Serial::sendf("cycles: %i\n", time);
 
 	EICRA = (1 << ISC01) | (1 << ISC11) | (1 << ISC00);
 	EIMSK |= (1 << INT1) | (1 << INT0);

@@ -37,7 +37,7 @@ ISR(INT1_vect)
 	auto const dist = avg_cnt *343.0f / (2000000.0f / 256) * 1/0.0254f; 
 	digit = dist;
 	OCR0B = 2*avg_cnt;
-	//Serial::sendf("dist: %i\n", (uint32_t)(avg_cnt));
+	Serial::sendf("%i\n", (uint32_t)(avg_cnt));
 }
 
 /**********************************************************************************************/
@@ -49,6 +49,7 @@ ISR(TIMER0_COMPA_vect)
 	PORTD |=  (1 << PORTD4);
 	for(volatile int i = 0; i < 0; i++); // wait 13us (measured)
 	PORTD &= ~(1 << PORTD4);
+	//Serial::send("100\n");
 	
 	PORTD |= (1 << PORTD7);
 	
