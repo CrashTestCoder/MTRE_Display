@@ -13,65 +13,65 @@ volatile int digit = sizeof(float);
 /**********************************************************************************************/
 /*                                      INT 0 Interrupts                                      */
 /**********************************************************************************************/
+volatile uint8_t cycle_start;
+
 ISR(INT0_vect)
 {
-	TCNT0 = 0;
+	cycle_start = TCNT0;
 }
+
+
+constexpr size_t read_size = 8;
+uint8_t raw_read[read_size];
 
 ISR(INT1_vect)
 {
-	auto const cnt = TCNT0;
-	static uint64_t raw_read = 0;
-	raw_read <<= 8 * sizeof(cnt);
-	raw_read |= cnt;
+	uint8_t const cnt = TCNT0 - cycle_start;
+	static uint8_t idx = 0;
+	idx++;
+	idx %= read_size;
+	raw_read[idx] = cnt;
 	//Serial::sendf("0x%08x\t",raw_read);
 	auto const avg_cnt = []{
 		float count = 0;
-		for(uint8_t i = 0; i < sizeof(raw_read); i++)
+		for(uint8_t i = 0; i < read_size; i++)
 		{
-			count += (uint8_t)(raw_read >> (i*8));
-			//Serial::sendf("%i\t",(uint8_t)(raw_read >> (i*8)));
+			count += (uint8_t)(raw_read[i]);
+			//Serial::sendf("%i\t",(uint8_t)(raw_read[i]));
 		}
-		return count / sizeof(raw_read);
+		return count / read_size;
 	}();
-	auto const dist = avg_cnt *343.0f / (2000000.0f / 256) * 1/0.0254f; 
+//Serial::send('\n');
+	auto const dist = avg_cnt *343.0f / (2000000.0f / 64) * 1/0.0254f; 
 	digit = dist;
-	OCR0B = 2*avg_cnt;
-	Serial::sendf("%i\n", (uint32_t)(avg_cnt));
+	
+	uint16_t ocr1b = avg_cnt / 20 *64;
+	//if(ocr1b > 64) OCR1B = 128;
+	//else OCR1B = ocr1b + 64;
+	OCR0B=dist;
+	//(avg_cnt / 20 *64 + 64);
+
+	//Serial::sendf("%i\n", (uint32_t)(avg_cnt*10));
 }
 
 /**********************************************************************************************/
 /*                                     Timer 0 Interrupts                                     */
 /**********************************************************************************************/
 
-ISR(TIMER0_COMPA_vect)
-{
-	PORTD |=  (1 << PORTD4);
-	for(volatile int i = 0; i < 0; i++); // wait 13us (measured)
-	PORTD &= ~(1 << PORTD4);
-	//Serial::send("100\n");
-	
-	PORTD |= (1 << PORTD7);
-	
-}
 
-ISR(TIMER0_COMPB_vect)
-{
-	PORTD &= ~(1 << PORTD7);
-}
+
 
 /**********************************************************************************************/
 /*                                     Timer 1 Interrupts                                     */
 /**********************************************************************************************/
 
-//ISR(TIMER1_COMPA_vect)
-//{
-	////Serial::send('a');
-	//auto const num = digit;
-	//Serial::sendf("%d\n",((uint16_t)(num*1000)));
-	//digit += .001;
-	//if(digit == 10000) digit = -999;
-//}
+ISR(TIMER1_COMPA_vect)
+{
+	PORTD |=  (1 << PORTD4);
+	for(volatile int i = 0; i < 0; i++); // wait 13us (measured)
+	PORTD &= ~(1 << PORTD4);
+	//Serial::send("100\n");
+}
 
 /**********************************************************************************************/
 /*                                     Timer 2 Interrupts                                     */

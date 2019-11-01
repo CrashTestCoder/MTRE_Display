@@ -20,21 +20,10 @@ int main(void)
     DDRB = 0xff;
 	DDRC = 0xff;
 	DDRD =  (1 << PORTD4) | 
-			(1 << PORTD7);
+			(1 << PORTD5);
 
-// 	TCCR2A |= 0x02;
-// 	TCCR2B |= 0x04;
-// 	TIMSK2 = (1 << OCIE2A);
-// 	OCR2A = 203;
-// 	
-// 	TCCR0A |= 0x02;
-// 	TCCR0B |= 0x04;
-// 	TIMSK0 = (1 << OCIE0A);
-// 	OCR0A = 194;
-
-
+	PORTD =~(1 << PORTD5);
 	Serial::begin(4800,Serial::async);
-	//Serial::send("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 
     {	// Setup Timer 2
 		using namespace Timer2;
@@ -46,21 +35,30 @@ int main(void)
 		OCR2A = 203;
     }
 
+	{	// Setup Timer 1
+		using namespace Timer1;
+		Timer1::setup(CTC_OCRA,_8);
+	
+		OCR1A = 8000;
+	
+		TIMSK1 = (1 << OCIE1A);
+	}
 
 	{	// Setup Timer 0
 		using namespace Timer0;
-		Timer0::setup(CTC,_256);
 		
+		TCCR0A = (1 << COM0B1) | 3;
+		TCCR0B = (1 << WGM02) | (1 << CS01) | (1 << CS00);
 		OCR0A = 194;
 	
-		TIMSK0 = (1 << OCIE0A) | (1 << OCIE0B);
+		//OCR0B = 1;
+		//TIMSK0 = (1 << OCIE0A);
 	}
 
 	EICRA = (1 << ISC01) | (1 << ISC11) | (1 << ISC00);
 	EIMSK |= (1 << INT1) | (1 << INT0);
 	
 	sei();
-	
     while (1);
 }
 
